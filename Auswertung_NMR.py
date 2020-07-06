@@ -10,9 +10,11 @@ def fit_func(temp_cel, H, T_m):
     y_N = y_N_fit[0]*temp_cel+ y_N_fit[1]
     y_U = y_U_fit[0] * temp_cel + y_U_fit[1]
     temp_kel = temp_cel + 273.15
-    c = 4.3 * 1000
+    c = 4.3  # *1000
     R = 8.314462
-    A = (-((H / R) * ((1/temp_kel) - (1/T_m)))) - ((c/ R) * (1 - (T_m/ temp_kel) - np.log(T_m/temp_kel)))
+    A_first = (-((H / R) * ((1/temp_kel) - (1/T_m))))
+    A_sec = (1 - (T_m/ temp_kel) - np.log(T_m/temp_kel))
+    A =A_first  - ((c/ R) * A_sec)
 
     counter = (y_N + (y_U * np.exp(A)))
     denominator = (1+ np.exp(A))
