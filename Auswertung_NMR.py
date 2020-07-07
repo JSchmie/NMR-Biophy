@@ -1,25 +1,25 @@
-import numpy as np  #Modul für wissenschafftliche rechnungen
+import numpy as np  # Modul für wissenschaftliche Rechnungen
 import matplotlib.pyplot as plt # Visualiesierung der Ergebnisse
 from scipy.optimize import curve_fit
 
-data = np.loadtxt("gb1_fN.txt", skiprows= 1) #einlesen der txt Datei
+data = np.loadtxt("gb1_fN.txt", skiprows= 1) # Einlesen der txt Datei
 
-def fit_func(temp_cel, H, T_m, c= 4.3): #definieren Fnúnktion nach welcher gefitet werden soll
-    y_N_fit = np.polyfit(data[0:7, 0], data[0:7, 1], 1) #linearer fit um Werte für y_N zu erhalten
-    y_U_fit = np.polyfit(data[-3:, 0], data[-3:, 1], 1) #linearer fit um Werte für y_H zu erhalten
-    y_N = y_N_fit[0]*temp_cel+ y_N_fit[1]   #berechnen des Wertes für Y_N aus lin. Fit.
-    y_U = y_U_fit[0] * temp_cel + y_U_fit[1] #berechnen des Wertes für Y_N aus lin. Fit.
-    temp_kel = temp_cel + 273.15    #umrechnen der Temp. in Kelvin
-    R = 8.314462 #Gaskonstante
-    A_first = (-((H / R) * ((1/temp_kel) - (1/T_m)))) #erster Teil von A
-    A_sec = (1 - (T_m/ temp_kel) - np.log(T_m/temp_kel)) #zweiter Teil von A
-    A =A_first  - ((c/ R) * A_sec)  # gesamt A
-    counter = (y_N + (y_U * np.exp(A))) #Zähler
-    denominator = (1+ np.exp(A)) #Nenner
+def fit_func(temp_cel, H, T_m, c= 4.3): # definieren Funktion nach welcher gefitet werden soll
+    y_N_fit = np.polyfit(data[0:7, 0], data[0:7, 1], 1) # linearer Fit um Werte für y_N zu erhalten
+    y_U_fit = np.polyfit(data[-3:, 0], data[-3:, 1], 1) # linearer Fit um Werte für y_H zu erhalten
+    y_N = y_N_fit[0]*temp_cel+ y_N_fit[1]   # Berechnen des Wertes für Y_N aus lin. Fit.
+    y_U = y_U_fit[0] * temp_cel + y_U_fit[1] # Berechnen des Wertes für Y_N aus lin. Fit.
+    temp_kel = temp_cel + 273.15    # Umrechnen der Temp. in Kelvin
+    R = 8.314462 # Gaskonstante
+    A_first = (-((H / R) * ((1/temp_kel) - (1/T_m)))) # Erster Teil von A
+    A_sec = (1 - (T_m/ temp_kel) - np.log(T_m/temp_kel)) # Zweiter Teil von A
+    A =A_first  - ((c/ R) * A_sec)  # Gesamt A
+    counter = (y_N + (y_U * np.exp(A))) # Zähler
+    denominator = (1+ np.exp(A)) # Nenner
     return counter / denominator
 
-y_N_fit = np.polyfit(data[0:7, 0], data[0:7, 1], 1) #nochmal fit für plot text
-y_U_fit = np.polyfit(data[-3:, 0], data[-3:, 1], 1) #nochmal fit für plot text
+y_N_fit = np.polyfit(data[0:7, 0], data[0:7, 1], 1) # Nochmal Fit für plot text
+y_U_fit = np.polyfit(data[-3:, 0], data[-3:, 1], 1) # Nochmal Fit für plot text
 
 bounds = ([-np.inf, 300],[np.inf, 400]) #angabe des suchbereiches wenn delta_c 4.3
 bounds_2 = ([-np.inf, 300,0],[np.inf, 400,np.inf])  #angabe des suchbereiches wenn delta_c frei
@@ -36,7 +36,7 @@ for i in range(len(data[:,0])):
     res2= fit_func(data[i,0], popt2[0],popt2[1])
     result2.append(res2)
 
-#Ploten der Kurve richtig hüpsch ge? ;)
+# Ploten der Kurve richtig hübsch ge? ;)
 
 plt.plot(data[:,0], result, "-v", label= "Fit function ",  markersize= 8, color = "#FF0000") #"#FF0000" "#EE9572"
 plt.plot(data[:,0], result2, "-", label= "Fit function by free $\Delta c_p^0$", color = "#00FA9A")   # "#00FA9A" "#1E90FF"
